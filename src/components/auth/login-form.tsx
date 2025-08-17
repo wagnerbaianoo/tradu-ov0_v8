@@ -1,9 +1,7 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -16,7 +14,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const navigate = useNavigate()
   const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -31,11 +29,6 @@ export default function LoginForm() {
 
       if (error) {
         console.error('[Supabase Login Error]:', error)
-        console.error('[Supabase Error Details]:', {
-          message: error.message,
-          status: error.status,
-          statusCode: error.status
-        })
         toast.error(error.message)
         return
       }
@@ -51,16 +44,16 @@ export default function LoginForm() {
           switch (userData.role) {
             case "ADMIN":
             case "SUPER_ADMIN":
-              router.push("/admin")
+              navigate("/admin")
               break
             case "TRANSLATOR":
-              router.push("/translator")
+              navigate("/translator")
               break
             default:
-              router.push("/events")
+              navigate("/events")
           }
         } else {
-          router.push("/events")
+          navigate("/events")
         }
       }
     } catch (error) {
@@ -130,7 +123,7 @@ export default function LoginForm() {
           <div className="text-center">
             <button
               type="button"
-              onClick={() => router.push("/auth/register")}
+              onClick={() => navigate("/auth/register")}
               className="text-sm text-gray-400 hover:text-white transition-colors"
             >
               Não tem conta? Cadastre-se

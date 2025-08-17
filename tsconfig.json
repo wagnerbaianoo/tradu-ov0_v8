@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "target": "ES2017",
@@ -17,8 +18,7 @@
       "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
       "@/lib/*": ["./src/lib/*"],
-      "@/pages/*": ["./src/pages/*"],
-      "@/types/*": ["./src/types/*"]
+      "@/pages/*": ["./src/pages/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
