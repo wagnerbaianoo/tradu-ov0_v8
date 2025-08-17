@@ -134,6 +134,28 @@ export function EnhancedNotesWidget() {
         if (!error) {
           note.synced = true
           setNotes((prev) => prev.map((n) => (n.id === note.id ? note : n)))
+        } else {
+          // Register background sync for offline notes
+          if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+            try {
+              const registration = await navigator.serviceWorker.ready
+              await registration.sync.register('sync-notes')
+              console.log('[v0] Background sync registered for notes')
+            } catch (syncError) {
+              console.error('[v0] Background sync registration failed:', syncError)
+            }
+          }
+        }
+      } else {
+        // Register background sync for offline notes
+        if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+          try {
+            const registration = await navigator.serviceWorker.ready
+            await registration.sync.register('sync-notes')
+            console.log('[v0] Background sync registered for offline notes')
+          } catch (syncError) {
+            console.error('[v0] Background sync registration failed:', syncError)
+          }
         }
       }
 

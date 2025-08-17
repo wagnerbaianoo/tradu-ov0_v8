@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -15,7 +16,7 @@ import LogoutButton from "@/components/auth/logout-button"
 import { createClient } from "@/lib/supabase/client"
 import { RealTimeMonitor } from "@/components/admin/real-time-monitor"
 
-export default function AdminDashboardClient() {
+const AdminDashboardClient = React.memo(function AdminDashboardClient() {
   const [stats, setStats] = useState({
     totalEvents: 0,
     activeEvents: 0,
@@ -244,4 +245,6 @@ export default function AdminDashboardClient() {
       </div>
     </div>
   )
-}
+})
+
+export default AdminDashboardClient

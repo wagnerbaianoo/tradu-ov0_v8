@@ -11,7 +11,7 @@ import { TranslationRoom } from '../components/translator/translation-room'
 import LogoutButton from '../components/auth/logout-button'
 import { createClient } from '../lib/supabase/client'
 
-export default function TranslatorPage() {
+const TranslatorPage = React.memo(function TranslatorPage() {
   const [isConnected, setIsConnected] = useState(false)
   const [isTransmitting, setIsTransmitting] = useState(false)
   const [isReceivingMainAudio, setIsReceivingMainAudio] = useState(false)
@@ -306,4 +306,6 @@ export default function TranslatorPage() {
       </div>
     </div>
   )
-}
+})
+
+export default TranslatorPage

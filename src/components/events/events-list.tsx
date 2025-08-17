@@ -35,7 +35,7 @@ export default function EventsList() {
     try {
       const { data, error } = await supabase
         .from("events")
-        .select("*")
+        .select("id, name, description, start_time, end_time, access_code, is_active, libras_enabled, translation_enabled, max_participants")
         .eq("is_active", true)
         .order("start_time", { ascending: true })
 

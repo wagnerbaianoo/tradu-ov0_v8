@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,7 +17,7 @@ interface EventInterfaceProps {
   polls: any[]
 }
 
-export default function EventInterface({ event, streams, polls }: EventInterfaceProps) {
+const EventInterface = React.memo(function EventInterface({ event, streams, polls }: EventInterfaceProps) {
   const [selectedStream, setSelectedStream] = useState(streams[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [participants, setParticipants] = useState(1247)
@@ -168,4 +169,6 @@ export default function EventInterface({ event, streams, polls }: EventInterface
       </div>
     </div>
   )
-}
+})
+
+export default EventInterface

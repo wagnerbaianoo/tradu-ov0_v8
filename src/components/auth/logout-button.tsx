@@ -5,6 +5,7 @@ import { LogOut } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-hot-toast"
+import { useAuthStore } from "@/store/auth"
 
 interface LogoutButtonProps {
   variant?: "default" | "ghost" | "outline"
@@ -15,10 +16,11 @@ interface LogoutButtonProps {
 export default function LogoutButton({ variant = "ghost", size = "sm", className }: LogoutButtonProps) {
   const navigate = useNavigate()
   const supabase = createClient()
+  const { logout } = useAuthStore()
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut()
+      await logout()
       toast.success("Logout realizado com sucesso")
       navigate("/auth/login")
     } catch (error) {

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Loader2, Eye, EyeOff, User, Lock } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "react-hot-toast"
+import { useAuthStore } from "@/store/auth"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("")
@@ -16,6 +17,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const supabase = createClient()
+  const { setUser } = useAuthStore()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,6 +40,14 @@ export default function LoginForm() {
         const { data: userData } = await supabase.from("users").select("role, name").eq("id", data.user.id).single()
 
         if (userData) {
+          // Update auth store
+          setUser({
+            id: data.user.id,
+            email: data.user.email!,
+            name: userData.name,
+            role: userData.role
+          })
+
           toast.success(`Bem-vindo, ${userData.name || "Usuário"}!`)
 
           // Redirect based on role
@@ -53,6 +63,11 @@ export default function LoginForm() {
               navigate("/events")
           }
         } else {
+          setUser({
+            id: data.user.id,
+            email: data.user.email!,
+            role: 'USER'
+          })
           navigate("/events")
         }
       }

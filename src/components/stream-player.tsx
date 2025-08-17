@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useEffect, useRef, useState } from "react"
 import { Play, Pause, Volume2, VolumeX, Settings, Maximize, Minimize, RotateCcw, Wifi, WifiOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -17,7 +18,7 @@ interface StreamPlayerProps {
   showControls?: boolean
 }
 
-export default function StreamPlayer({
+const StreamPlayer = React.memo(function StreamPlayer({
   stream,
   isPlaying,
   onPlayingChange,
@@ -489,4 +490,6 @@ export default function StreamPlayer({
       )}
     </div>
   )
-}
+})
+
+export default StreamPlayer

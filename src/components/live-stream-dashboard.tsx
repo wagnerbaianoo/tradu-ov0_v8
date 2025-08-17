@@ -92,7 +92,7 @@ export function LiveStreamDashboard() {
     try {
       const { data: streams } = await supabase
         .from("streams")
-        .select("*")
+        .select("id, event_id, language, language_code, flag, stream_type, url, is_original, quality, enabled, input_type, flue_key, mode")
         .eq("event_id", activeEvent.id)
         .eq("enabled", true)
 
