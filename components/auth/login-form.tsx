@@ -30,6 +30,12 @@ export default function LoginForm() {
       })
 
       if (error) {
+        console.error('[Supabase Login Error]:', error)
+        console.error('[Supabase Error Details]:', {
+          message: error.message,
+          status: error.status,
+          statusCode: error.status
+        })
         toast.error(error.message)
         return
       }

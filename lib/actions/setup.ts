@@ -17,6 +17,7 @@ export async function createSuperAdmin(data: {
     })
 
     if (authError) {
+      console.error('[Setup Auth Error]:', authError)
       return { error: `Erro na autenticação: ${authError.message}` }
     }
 

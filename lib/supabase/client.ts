@@ -6,7 +6,24 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOi
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
 export const createClient = () => {
-  return createSupabaseClient(supabaseUrl, supabaseAnonKey)
+  return createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+    auth: { 
+      persistSession: false,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    },
+    global: {
+      headers: {
+        'X-Client-Info': 'translateevent-v5'
+      }
+    }
+  })
 }
 
 export const supabase = createClient()
+
+// Debug logging
+if (typeof window !== 'undefined') {
+  console.log('[Supabase] URL:', supabaseUrl)
+  console.log('[Supabase] Key configured:', !!supabaseAnonKey)
+}

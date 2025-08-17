@@ -53,6 +53,12 @@ export default function RegisterForm() {
       })
 
       if (error) {
+        console.error('[Supabase Register Error]:', error)
+        console.error('[Supabase Error Details]:', {
+          message: error.message,
+          status: error.status,
+          statusCode: error.status
+        })
         toast.error(error.message)
         return
       }

@@ -20,6 +20,7 @@ export async function signIn(prevState: any, formData: FormData) {
   })
 
   if (error) {
+    console.error('[Server Auth Error]:', error)
     return { error: error.message }
   }
 
