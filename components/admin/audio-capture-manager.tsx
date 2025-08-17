@@ -22,7 +22,7 @@ import {
 } from "lucide-react"
 import { webRTCClient } from "@/lib/audio/webrtc-client"
 import { AudioVisualizer } from "@/components/translator/audio-visualizer"
-import toast from "react-hot-toast"
+import { toast } from "react-hot-toast"
 
 interface AudioDevice {
   deviceId: string

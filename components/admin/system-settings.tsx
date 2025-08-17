@@ -21,7 +21,7 @@ import {
   HardDrive,
 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
-import toast from "react-hot-toast"
+import { toast } from "react-hot-toast"
 import { AudioCaptureManager } from "@/components/admin/audio-capture-manager"
 import { ProductionValidator } from "@/components/system/production-validator"
 

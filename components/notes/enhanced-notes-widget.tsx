@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Search, Tag, Sync, SyncOff, Trash2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
-import Fuse from "fuse.js"
+import Fuse from "fuse.js/dist/fuse.min.js"
 
 interface Note {
   id: string

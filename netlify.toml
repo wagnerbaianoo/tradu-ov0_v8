@@ -1,6 +1,6 @@
 [build]
   command = "npm install && npx prisma generate --skip-seed && npm run build"
-  publish = "out"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"

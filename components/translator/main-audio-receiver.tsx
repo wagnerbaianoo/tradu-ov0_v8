@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Headphones, BluetoothOffIcon as HeadphonesOff, Volume2, Radio } from "lucide-react"
 import { webRTCClient } from "@/lib/audio/webrtc-client"
 import { createClient } from "@/lib/supabase/client"
-import toast from "react-hot-toast"
+import { toast } from "react-hot-toast"
 
 interface MainAudioReceiverProps {
   isReceiving: boolean

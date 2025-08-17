@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Loader2, Eye, EyeOff, User, Lock } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
-import toast from "react-hot-toast"
+import { toast } from "react-hot-toast"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("")

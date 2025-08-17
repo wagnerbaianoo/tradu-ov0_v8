@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Eye, EyeOff, User, Lock, Mail, UserCheck } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
-import toast from "react-hot-toast"
+import { toast } from "react-hot-toast"
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
