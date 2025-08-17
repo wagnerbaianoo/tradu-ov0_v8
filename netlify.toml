@@ -1,0 +1,14 @@
+[build]
+  command = "npm install && npx prisma generate --skip-seed && npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"

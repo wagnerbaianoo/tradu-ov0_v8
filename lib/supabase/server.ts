@@ -10,20 +10,21 @@ export const isSupabaseConfigured =
 
 export const createClient = cache(() => {
   if (!isSupabaseConfigured) {
-    console.warn("Supabase environment variables are not set. Using dummy client.")
-    return {
-      auth: {
-        getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-        getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      },
-      from: () => ({
-        select: () => ({
-          eq: () => ({
-            single: () => Promise.resolve({ data: null, error: null }),
-          }),
-        }),
-      }),
-    } as any
+    console.warn("Supabase environment variables not found, using fallback configuration")
+    return createServerClient(
+      "https://eozbqzajqtortjugyyvm.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvemJxemFqcXRvcnRqdWd5eXZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzOTQ0NzksImV4cCI6MjA3MDk3MDQ3OX0.t9CKaYIF2jR232NCo8H5ANros07ZTvY7jXgc9Ba4XeA",
+      {
+        cookies: {
+          getAll() {
+            return []
+          },
+          setAll() {
+            // No-op for fallback
+          },
+        },
+      }
+    )
   }
 
   const cookieStore = cookies()

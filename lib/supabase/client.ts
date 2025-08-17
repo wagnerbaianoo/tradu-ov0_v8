@@ -14,7 +14,11 @@ export const supabase = isSupabaseConfigured
 
 export const createClient = () => {
   if (!isSupabaseConfigured) {
-    throw new Error("Supabase is not configured. Please check your environment variables.")
+    console.warn("Supabase environment variables not found, using fallback configuration")
+    return createSupabaseClient(
+      "https://eozbqzajqtortjugyyvm.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvemJxemFqcXRvcnRqdWd5eXZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzOTQ0NzksImV4cCI6MjA3MDk3MDQ3OX0.t9CKaYIF2jR232NCo8H5ANros07ZTvY7jXgc9Ba4XeA"
+    )
   }
 
   return createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
