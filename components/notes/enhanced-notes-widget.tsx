@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, Tag, Sync, SyncOff, Trash2 } from "lucide-react"
+import { Plus, Search, Tag, FolderSync as Sync, MicOff as SyncOff, Trash2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import Fuse from "fuse.js/dist/fuse.min.js"
 
