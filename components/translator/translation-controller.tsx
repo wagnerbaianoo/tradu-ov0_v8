@@ -62,7 +62,7 @@ export function TranslationController({
 
     const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
 
-    function updateAudioLevel() {
+    const updateAudioLevelLoop = () => {
       if (!analyserRef.current) return
 
       analyserRef.current.getByteFrequencyData(dataArray)
@@ -71,11 +71,11 @@ export function TranslationController({
       onAudioLevelChange(normalizedLevel)
 
       if (isConnected) {
-        requestAnimationFrame(updateAudioLevel)
+        requestAnimationFrame(updateAudioLevelLoop)
       }
     }
 
-    updateAudioLevel()
+    updateAudioLevelLoop()
   }, [isConnected, onAudioLevelChange])
 
   const connectMicrophone = async () => {

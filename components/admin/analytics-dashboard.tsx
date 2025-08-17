@@ -42,7 +42,7 @@ export function AnalyticsDashboard() {
   useEffect(() => {
     loadAnalytics()
 
-    const interval = setInterval(loadAnalytics, 10000) // Update every 10s for production
+    const interval = setInterval(() => loadAnalytics(), 10000) // Update every 10s for production
     return () => clearInterval(interval)
   }, [])
 

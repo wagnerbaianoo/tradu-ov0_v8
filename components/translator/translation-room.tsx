@@ -89,7 +89,7 @@ export function TranslationRoom({ sourceLanguage, targetLanguage, isActive, chan
   }
 
   const startStatsUpdates = () => {
-    const interval = setInterval(() => {
+    const intervalId = setInterval(() => {
       setRoomInfo((prev) => ({
         ...prev,
         sessionDuration: prev.sessionDuration + 1,
@@ -102,7 +102,7 @@ export function TranslationRoom({ sourceLanguage, targetLanguage, isActive, chan
       }))
     }, 5000)
 
-    return () => clearInterval(interval)
+    return () => clearInterval(intervalId)
   }
 
   const getLanguageDisplay = (code: string) => {

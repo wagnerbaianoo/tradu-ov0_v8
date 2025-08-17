@@ -20,7 +20,7 @@ export function AudioVisualizer({ audioLevel, isListening }: AudioVisualizerProp
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    const draw = () => {
+    const drawLoop = () => {
       const width = canvas.width
       const height = canvas.height
 
@@ -63,10 +63,10 @@ export function AudioVisualizer({ audioLevel, isListening }: AudioVisualizerProp
         ctx.fillRect(0, height / 2 - 1, width, 2)
       }
 
-      animationRef.current = requestAnimationFrame(draw)
+      animationRef.current = requestAnimationFrame(drawLoop)
     }
 
-    draw()
+    drawLoop()
 
     return () => {
       if (animationRef.current) {

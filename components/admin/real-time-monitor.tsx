@@ -38,7 +38,7 @@ export function RealTimeMonitor() {
     loadSystemStatus()
 
     // Real-time monitoring every 5 seconds
-    const interval = setInterval(loadSystemStatus, 5000)
+    const interval = setInterval(() => loadSystemStatus(), 5000)
     return () => clearInterval(interval)
   }, [])
 

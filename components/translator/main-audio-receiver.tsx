@@ -152,7 +152,7 @@ export function MainAudioReceiver({
 
     const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
 
-    const updateLevel = () => {
+    const updateLevelLoop = () => {
       if (!analyserRef.current || !isReceiving) return
 
       analyserRef.current.getByteFrequencyData(dataArray)
@@ -169,11 +169,11 @@ export function MainAudioReceiver({
       }))
 
       if (isReceiving) {
-        requestAnimationFrame(updateLevel)
+        requestAnimationFrame(updateLevelLoop)
       }
     }
 
-    updateLevel()
+    updateLevelLoop()
   }
 
   // Update volume in real-time

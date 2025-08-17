@@ -114,7 +114,7 @@ export default function EventAccessForm() {
 
     if (!ctx) return
 
-    const scan = () => {
+    const scanLoop = () => {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
@@ -140,11 +140,11 @@ export default function EventAccessForm() {
       }
 
       if (showQRScanner) {
-        requestAnimationFrame(scan)
+        requestAnimationFrame(scanLoop)
       }
     }
 
-    scan()
+    scanLoop()
   }
 
   // Simplified QR detection (replace with jsQR in production)

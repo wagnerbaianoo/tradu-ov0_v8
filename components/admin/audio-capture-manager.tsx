@@ -251,7 +251,7 @@ export function AudioCaptureManager() {
       clearInterval(statsIntervalRef.current)
     }
 
-    statsIntervalRef.current = setInterval(async () => {
+    statsIntervalRef.current = setInterval(() => {
       if (!analyserRef.current || !audioContextRef.current) return
 
       // Get audio level
@@ -266,18 +266,19 @@ export function AudioCaptureManager() {
       let jitter = 0
 
       if (isStreaming) {
-        const stats = await webRTCClient.getStats()
-        if (stats) {
-          stats.forEach((report) => {
-            if (report.type === "outbound-rtp" && report.mediaType === "audio") {
-              packetsLost = report.packetsLost || 0
-              jitter = report.jitter || 0
-            }
-            if (report.type === "candidate-pair" && report.state === "succeeded") {
-              latency = report.currentRoundTripTime || 0
-            }
-          })
-        }
+        webRTCClient.getStats().then((stats) => {
+          if (stats) {
+            stats.forEach((report) => {
+              if (report.type === "outbound-rtp" && report.mediaType === "audio") {
+                packetsLost = report.packetsLost || 0
+                jitter = report.jitter || 0
+              }
+              if (report.type === "candidate-pair" && report.state === "succeeded") {
+                latency = report.currentRoundTripTime || 0
+              }
+            })
+          }
+        })
       }
 
       setAudioStats((prev) => ({
