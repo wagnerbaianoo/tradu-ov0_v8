@@ -13,6 +13,8 @@ import { TranslationRoom } from "@/components/translator/translation-room"
 import LogoutButton from "@/components/auth/logout-button"
 import { createClient } from "@/lib/supabase/client"
 
+export const dynamic = 'force-dynamic'
+
 export default function TranslatorPanel() {
   const [isConnected, setIsConnected] = useState(false)
   const [isTransmitting, setIsTransmitting] = useState(false)

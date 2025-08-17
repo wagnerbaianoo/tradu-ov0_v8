@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -9,6 +8,7 @@ const nextConfig = {
   },
   experimental: {
     esmExternals: true,
+    serverComponentsExternalPackages: ['@supabase/supabase-js', '@supabase/ssr'],
   },
   webpack: (config) => {
     config.resolve.fallback = {
@@ -16,6 +16,9 @@ const nextConfig = {
       fs: false,
       net: false,
       tls: false,
+      crypto: false,
+      stream: false,
+      util: false,
     }
     return config
   },

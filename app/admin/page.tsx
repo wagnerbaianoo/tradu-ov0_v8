@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic"
 
+export const dynamic = 'force-dynamic'
+
 // Import admin components dynamically without SSR to avoid hydration issues
 const AdminDashboardClient = dynamic(() => import("@/components/admin/admin-dashboard-client"), { 
   ssr: false,
