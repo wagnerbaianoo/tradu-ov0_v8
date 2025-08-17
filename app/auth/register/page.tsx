@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import RegisterForm from "@/components/auth/register-form"
 
 export default async function RegisterPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Check if user is already authenticated
   const {

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import LoginForm from "@/components/auth/login-form"
 
 export default async function LoginPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Check if user is already authenticated
   const {

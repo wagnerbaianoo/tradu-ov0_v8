@@ -4,7 +4,7 @@ import EventsList from "@/components/events/events-list"
 import LogoutButton from "@/components/auth/logout-button" // Import the LogoutButton component
 
 export default async function EventsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Check if user is authenticated
   const {

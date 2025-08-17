@@ -6,7 +6,7 @@ export default async function AuthCallback({
 }: {
   searchParams: { code?: string }
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   if (searchParams.code) {
     const { error } = await supabase.auth.exchangeCodeForSession(searchParams.code)

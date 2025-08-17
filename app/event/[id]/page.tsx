@@ -9,7 +9,7 @@ interface EventPageProps {
 }
 
 export default async function EventPage({ params }: EventPageProps) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Get event details
   const { data: event, error: eventError } = await supabase.from("events").select("*").eq("id", params.id).single()
