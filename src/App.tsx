@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from 'react-hot-toast'
 import ErrorBoundary from './components/ErrorBoundary'
+import './globals.css'
 
 // Lazy load pages
 const HomePage = lazy(() => import('./pages/HomePage'))
