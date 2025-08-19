@@ -7,21 +7,11 @@ import { Badge } from "@/components/ui/badge"
 import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react"
 import { EventManagement } from "@/components/admin/event-management"
 import { StreamManagement } from "@/components/admin/stream-management"
+import { AudioCaptureManager } from "@/components/admin/audio-capture-manager"
 import { AnalyticsDashboard } from "@/components/admin/analytics-dashboard"
 import { UserManagement } from "@/components/admin/user-management"
 import { SystemSettings } from "@/components/admin/system-settings"
-import dynamic from 'next/dynamic'
-
-// Carrega componentes que usam APIs do navegador apenas no cliente
-const AudioCaptureManager = dynamic(
-  () => import('@/components/admin/audio-capture-manager'),
-  { ssr: false }
-)
-
-const RealTimeMonitor = dynamic(
-  () => import('@/components/admin/real-time-monitor'),
-  { ssr: false }
-)
+import { RealTimeMonitor } from "@/components/admin/real-time-monitor"
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -112,7 +102,6 @@ export default function AdminDashboard() {
                   <Activity className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
-      
                   <p className="text-sm text-gray-300">Eventos Ativos</p>
                   <p className="text-2xl font-bold text-white">{loading ? "..." : stats.activeEvents}</p>
                 </div>
