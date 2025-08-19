@@ -1,50 +1,65 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react"
-import { EventManagement } from "@/components/admin/event-management"
-import { StreamManagement } from "@/components/admin/stream-management"
-import { AudioCaptureManager } from "@/components/admin/audio-capture-manager"
-import { AnalyticsDashboard } from "@/components/admin/analytics-dashboard"
-import { UserManagement } from "@/components/admin/user-management"
-import { SystemSettings } from "@/components/admin/system-settings"
-import { RealTimeMonitor } from "@/components/admin/real-time-monitor"
+import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react";
+
+// Carregar componentes dinamicamente com SSR desabilitado
+const EventManagement = dynamic(() => import("@/components/admin/event-management"), { ssr: false });
+const StreamManagement = dynamic(() => import("@/components/admin/stream-management"), { ssr: false });
+const AudioCaptureManager = dynamic(() => import("@/components/admin/audio-capture-manager"), { ssr: false });
+const AnalyticsDashboard = dynamic(() => import("@/components/admin/analytics-dashboard"), { ssr: false });
+const UserManagement = dynamic(() => import("@/components/admin/user-management"), { ssr: false });
+const SystemSettings = dynamic(() => import("@/components/admin/system-settings"), { ssr: false });
+const RealTimeMonitor = dynamic(() => import("@/components/admin/real-time-monitor"), { 
+  ssr: false,
+  loading: () => <div className="text-white">Carregando monitor...</div>
+});
 
 export default function AdminDashboard() {
+  const [isClient, setIsClient] = useState(false);
   const [stats, setStats] = useState({
     totalEvents: 12,
     activeEvents: 3,
     totalStreams: 8,
     activeTranslators: 5,
     totalUsers: 247,
-  })
-  const [loading, setLoading] = useState(false)
+  });
+  const [loading, setLoading] = useState(false);
 
   const currentUser = {
     name: "Administrador Demo",
     role: "SUPER_ADMIN",
     email: "admin@demo.com",
-  }
+  };
 
   const loadDashboardStats = async () => {
-    // Dados de demonstração - sem necessidade de carregar do banco
     setStats({
       totalEvents: 12 + Math.floor(Math.random() * 5),
       activeEvents: 3 + Math.floor(Math.random() * 3),
       totalStreams: 8 + Math.floor(Math.random() * 4),
       activeTranslators: 5 + Math.floor(Math.random() * 8),
       totalUsers: 247 + Math.floor(Math.random() * 50),
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    loadDashboardStats()
-    const interval = setInterval(loadDashboardStats, 30000) // Atualiza a cada 30s
-    return () => clearInterval(interval)
-  }, [])
+    setIsClient(true);
+    loadDashboardStats();
+    const interval = setInterval(loadDashboardStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Carregando dashboard...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -81,108 +96,50 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-4 py-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/20 rounded-lg">
-                  <BarChart3 className="w-5 h-5 text-blue-400" />
+          {[
+            { icon: BarChart3, color: 'blue', label: 'Total Eventos', value: stats.totalEvents },
+            { icon: Activity, color: 'green', label: 'Eventos Ativos', value: stats.activeEvents },
+            { icon: Radio, color: 'purple', label: 'Total Streams', value: stats.totalStreams },
+            { icon: Globe, color: 'orange', label: 'Tradutores Ativos', value: stats.activeTranslators },
+            { icon: Users, color: 'cyan', label: 'Total Usuários', value: stats.totalUsers },
+          ].map((item, index) => (
+            <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 bg-${item.color}-500/20 rounded-lg`}>
+                    <item.icon className={`w-5 h-5 text-${item.color}-400`} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-300">{item.label}</p>
+                    <p className="text-2xl font-bold text-white">{loading ? "..." : item.value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-300">Total Eventos</p>
-                  <p className="text-2xl font-bold text-white">{loading ? "..." : stats.totalEvents}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-500/20 rounded-lg">
-                  <Activity className="w-5 h-5 text-green-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Eventos Ativos</p>
-                  <p className="text-2xl font-bold text-white">{loading ? "..." : stats.activeEvents}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <Radio className="w-5 h-5 text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Total Streams</p>
-                  <p className="text-2xl font-bold text-white">{loading ? "..." : stats.totalStreams}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-orange-500/20 rounded-lg">
-                  <Globe className="w-5 h-5 text-orange-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Tradutores Ativos</p>
-                  <p className="text-2xl font-bold text-white">{loading ? "..." : stats.activeTranslators}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-cyan-500/20 rounded-lg">
-                  <Users className="w-5 h-5 text-cyan-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-300">Total Usuários</p>
-                  <p className="text-2xl font-bold text-white">{loading ? "..." : stats.totalUsers}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Main Content */}
         <Tabs defaultValue="events" className="w-full">
           <TabsList className="grid w-full grid-cols-7 bg-black/40 border-white/20">
-            <TabsTrigger value="events" className="text-white data-[state=active]:bg-purple-600">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Eventos
-            </TabsTrigger>
-            <TabsTrigger value="streams" className="text-white data-[state=active]:bg-purple-600">
-              <Radio className="w-4 h-4 mr-2" />
-              Streams
-            </TabsTrigger>
-            <TabsTrigger value="audio" className="text-white data-[state=active]:bg-purple-600">
-              <Mic className="w-4 h-4 mr-2" />
-              Áudio
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-purple-600">
-              <Activity className="w-4 h-4 mr-2" />
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger value="users" className="text-white data-[state=active]:bg-purple-600">
-              <Users className="w-4 h-4 mr-2" />
-              Usuários
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="text-white data-[state=active]:bg-purple-600">
-              <Settings className="w-4 h-4 mr-2" />
-              Sistema
-            </TabsTrigger>
-            <TabsTrigger value="monitor" className="text-white data-[state=active]:bg-purple-600">
-              <Activity className="w-4 h-4 mr-2" />
-              Monitor
-            </TabsTrigger>
+            {[
+              { value: 'events', icon: BarChart3, label: 'Eventos' },
+              { value: 'streams', icon: Radio, label: 'Streams' },
+              { value: 'audio', icon: Mic, label: 'Áudio' },
+              { value: 'analytics', icon: Activity, label: 'Analytics' },
+              { value: 'users', icon: Users, label: 'Usuários' },
+              { value: 'settings', icon: Settings, label: 'Sistema' },
+              { value: 'monitor', icon: Activity, label: 'Monitor' },
+            ].map((tab) => (
+              <TabsTrigger 
+                key={tab.value}
+                value={tab.value}
+                className="text-white data-[state=active]:bg-purple-600"
+              >
+                <tab.icon className="w-4 h-4 mr-2" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="events" className="mt-6">
@@ -215,5 +172,5 @@ export default function AdminDashboard() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
