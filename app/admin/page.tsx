@@ -1,7 +1,6 @@
 // app/admin/page.tsx
 'use client';
 import { Suspense, useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
