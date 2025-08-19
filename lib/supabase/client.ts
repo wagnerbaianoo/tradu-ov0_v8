@@ -1,10 +1,10 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
-// Lê as variáveis de ambiente
+// Read environment variables
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Verifica se as variáveis estão configuradas
+// Check if variables are properly configured
 export const isSupabaseConfigured = 
   typeof supabaseUrl === "string" && 
   supabaseUrl.length > 0 && 
@@ -13,7 +13,7 @@ export const isSupabaseConfigured =
   supabaseAnonKey.length > 0 && 
   !supabaseAnonKey.includes("SEU_ANON_KEY")
 
-// Função auxiliar para retry em fetch
+// Helper function for fetch retry
 async function fetchWithRetry(
   url: string,
   options: RequestInit = {},
@@ -22,7 +22,7 @@ async function fetchWithRetry(
   try {
     const res = await fetch(url, {
       ...options,
-      signal: AbortSignal.timeout(5000), // timeout de 5s
+      signal: AbortSignal.timeout(5000), // 5s timeout
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return res
@@ -35,26 +35,26 @@ async function fetchWithRetry(
   }
 }
 
-// Criação do client com tratamento para SSR e Client
+// Create client with SSR and Client-side handling
 export const createClient = () => {
-  // Se não configurado e rodando no SSR
+  // If not configured and running on SSR
   if (!isSupabaseConfigured && typeof window === "undefined") {
-    console.warn("⚠️ Supabase não configurado no servidor (SSR)")
+    console.warn("⚠️ Supabase not configured on server (SSR)")
     return null
   }
 
-  // Se não configurado e rodando no Client
+  // If not configured and running on Client
   if (!isSupabaseConfigured && typeof window !== "undefined") {
     throw new Error("Supabase is not configured. Please check your environment variables.")
   }
 
-  // Se configurado, criar e retornar o cliente
+  // If configured, create and return client
   return createSupabaseClient(supabaseUrl!, supabaseAnonKey!, {
     global: { fetch: fetchWithRetry }
   })
 }
 
-// Singleton para uso no Client (com verificação)
+// Singleton for Client usage (with verification)
 export const supabase = 
   typeof window !== "undefined" && isSupabaseConfigured
     ? createSupabaseClient(supabaseUrl!, supabaseAnonKey!, {

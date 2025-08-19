@@ -18,6 +18,7 @@ export class WebRTCClient {
   private remoteStream: MediaStream | null = null
   private isConnected = false
   private streamConfig: StreamConfig | null = null
+  private tracksAdded = false
 
   constructor() {
     this.setupPeerConnection()
@@ -27,6 +28,8 @@ export class WebRTCClient {
     this.peerConnection = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }],
     })
+
+    this.tracksAdded = false
 
     this.peerConnection.oniceconnectionstatechange = () => {
       console.log("[v0] ICE connection state:", this.peerConnection?.iceConnectionState)
@@ -94,7 +97,7 @@ export class WebRTCClient {
     try {
       if (config.type === "flue" && config.key) {
         // WHEP connection to Flue.live
-        const whepUrl = `https://whep.flue.live/?stream=${config.key}`
+        const whepUrl = `${process.env.NEXT_PUBLIC_FLUE_LIVE_WHEP_URL || 'https://whep.flue.live'}/?stream=${config.key}`
 
         // Create offer for receiving stream
         const offer = await this.peerConnection.createOffer({
@@ -109,6 +112,9 @@ export class WebRTCClient {
           method: "POST",
           headers: {
             "Content-Type": "application/sdp",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
           },
           body: offer.sdp,
         })
@@ -142,14 +148,18 @@ export class WebRTCClient {
     }
 
     try {
-      // Add local stream tracks to peer connection
-      localStream.getTracks().forEach((track) => {
-        this.peerConnection?.addTrack(track, localStream)
-      })
+      // Add local stream tracks to peer connection (prevent duplicates)
+      if (!this.tracksAdded) {
+        localStream.getTracks().forEach((track) => {
+          this.peerConnection?.addTrack(track, localStream)
+        })
+        this.tracksAdded = true
+        console.log("[v0] Tracks added to peer connection")
+      }
 
       if (config.type === "flue" && config.key) {
         // WHIP connection to Flue.live
-        const whipUrl = `https://whip.flue.live/?stream=${config.key}`
+        const whipUrl = `${process.env.NEXT_PUBLIC_FLUE_LIVE_WHIP_URL || 'https://whip.flue.live'}/?stream=${config.key}`
 
         // Create offer for sending stream
         const offer = await this.peerConnection.createOffer()
@@ -160,6 +170,9 @@ export class WebRTCClient {
           method: "POST",
           headers: {
             "Content-Type": "application/sdp",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
           },
           body: offer.sdp,
         })
@@ -212,6 +225,7 @@ export class WebRTCClient {
     this.remoteStream = null
     this.isConnected = false
     this.streamConfig = null
+    this.tracksAdded = false
     console.log("[v0] WebRTC client disconnected")
   }
 
