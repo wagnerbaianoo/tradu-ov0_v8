@@ -3,7 +3,6 @@
 
 import { useState, useEffect, Suspense } from "react";
 import dynamic from 'next/dynamic'; // Importação ESSENCIAL que estava faltando
-import dynamic from 'next/dynamic'; // Importação ESSENCIAL que estava faltando
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
