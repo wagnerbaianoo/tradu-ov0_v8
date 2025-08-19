@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -7,7 +10,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true, // Apenas se você realmente precisa desativar a otimização
+    unoptimized: true,
   },
   webpack: (config, { isServer }) => {
     // Configurações específicas para evitar erros com módulos Node.js no cliente
@@ -17,10 +20,12 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
+        stream: false,
+        util: false,
       };
     }
     
-    // Adicione isto se estiver usando bibliotecas ESM problemáticas
     config.experiments = {
       ...config.experiments,
       topLevelAwait: true,
@@ -28,9 +33,10 @@ const nextConfig = {
     
     return config;
   },
-  // Adicione isto se estiver usando transpilação de pacotes específicos
   transpilePackages: [
-    // Liste pacotes que precisam de transpilação adicional
+    '@radix-ui/react-select',
+    'lucide-react',
+    '@supabase/supabase-js'
   ],
 }
 

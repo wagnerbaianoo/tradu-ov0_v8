@@ -3,22 +3,23 @@
 
 import { useState, useEffect, Suspense } from "react";
 import dynamic from 'next/dynamic'; // Importação ESSENCIAL que estava faltando
+import dynamic from 'next/dynamic'; // Importação ESSENCIAL que estava faltando
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react";
 
 // Componentes estáticos
-import EventManagement from "@/components/admin/event-management";
-import StreamManagement from "@/components/admin/stream-management";
-import AnalyticsDashboard from "@/components/admin/analytics-dashboard";
-import UserManagement from "@/components/admin/user-management";
-import SystemSettings from "@/components/admin/system-settings";
+import { EventManagement } from "@/components/admin/event-management";
+import { StreamManagement } from "@/components/admin/stream-management";
+import { AnalyticsDashboard } from "@/components/admin/analytics-dashboard";
+import { UserManagement } from "@/components/admin/user-management";
+import { SystemSettings } from "@/components/admin/system-settings";
 
 // Componentes dinâmicos COM tratamento de erro
 const AudioCaptureManager = dynamic(
   () => import("@/components/admin/audio-capture-manager")
-    .then(mod => mod.default)
+    .then(mod => mod.AudioCaptureManager)
     .catch(err => {
       console.error("Failed to load AudioCaptureManager", err);
       return () => <div className="text-red-500">Erro ao carregar módulo de áudio</div>;
@@ -31,7 +32,7 @@ const AudioCaptureManager = dynamic(
 
 const RealTimeMonitor = dynamic(
   () => import("@/components/admin/real-time-monitor")
-    .then(mod => mod.default)
+    .then(mod => mod.RealTimeMonitor)
     .catch(err => {
       console.error("Failed to load RealTimeMonitor", err);
       return () => <div className="text-red-500">Erro ao carregar monitor</div>;
@@ -82,9 +83,115 @@ export default function AdminPage() {
       {/* Header e Stats Cards permanecem iguais */}
       
       <div className="container mx-auto px-4 py-6">
+        {/* Header e Stats Cards */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Painel Administrativo</h1>
+          <p className="text-gray-300">TranslateEvent V5 - Sistema de Tradução Simultânea</p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <Activity className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-300">Eventos</p>
+                  <p className="text-2xl font-bold text-white">{stats.totalEvents}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-500/20 rounded-lg">
+                  <Radio className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-300">Eventos Ativos</p>
+                  <p className="text-2xl font-bold text-white">{stats.activeEvents}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-500/20 rounded-lg">
+                  <Globe className="w-5 h-5 text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-300">Streams</p>
+                  <p className="text-2xl font-bold text-white">{stats.totalStreams}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-500/20 rounded-lg">
+                  <Mic className="w-5 h-5 text-orange-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-300">Tradutores</p>
+                  <p className="text-2xl font-bold text-white">{stats.activeTranslators}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-cyan-500/20 rounded-lg">
+                  <Users className="w-5 h-5 text-cyan-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-300">Usuários</p>
+                  <p className="text-2xl font-bold text-white">{stats.totalUsers}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Tabs defaultValue="events" className="w-full">
           <TabsList className="grid w-full grid-cols-7 bg-black/40 border-white/20">
-            {/* Abas permanecem iguais */}
+            <TabsTrigger value="events" className="text-white data-[state=active]:bg-purple-600">
+              <Activity className="h-4 w-4 mr-2" />
+              Eventos
+            </TabsTrigger>
+            <TabsTrigger value="streams" className="text-white data-[state=active]:bg-purple-600">
+              <Radio className="h-4 w-4 mr-2" />
+              Streams
+            </TabsTrigger>
+            <TabsTrigger value="audio" className="text-white data-[state=active]:bg-purple-600">
+              <Mic className="h-4 w-4 mr-2" />
+              Áudio
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-white data-[state=active]:bg-purple-600">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="users" className="text-white data-[state=active]:bg-purple-600">
+              <Users className="h-4 w-4 mr-2" />
+              Usuários
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="text-white data-[state=active]:bg-purple-600">
+              <Settings className="h-4 w-4 mr-2" />
+              Config
+            </TabsTrigger>
+            <TabsTrigger value="monitor" className="text-white data-[state=active]:bg-purple-600">
+              <Globe className="h-4 w-4 mr-2" />
+              Monitor
+            </TabsTrigger>
           </TabsList>
 
           <Suspense fallback={<div className="text-white p-4">Carregando módulo...</div>}>

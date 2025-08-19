@@ -253,3 +253,9 @@ export function getWebRTCClientInstance(): WebRTCClient {
   
   return _webRTCClient
 }
+
+// Export default for compatibility
+export default WebRTCClient
+
+// Named export for webRTCClient
+export const webRTCClient = getWebRTCClientInstance()
