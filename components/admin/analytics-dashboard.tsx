@@ -108,11 +108,11 @@ export function AnalyticsDashboard() {
     try {
       const { data: channels } = await supabase
         .from("translation_channels")
-        .select("source_language, target_language, is_active")
+        .select("base_language, target_language, is_active")
 
       const languageCount: Record<string, number> = {}
       channels?.forEach((channel) => {
-        languageCount[channel.source_language] = (languageCount[channel.source_language] || 0) + 1
+        languageCount[channel.base_language] = (languageCount[channel.base_language] || 0) + 1
         languageCount[channel.target_language] = (languageCount[channel.target_language] || 0) + 1
       })
 
@@ -152,7 +152,7 @@ export function AnalyticsDashboard() {
     try {
       const { data: channels } = await supabase
         .from("translation_channels")
-        .select("source_language, target_language, is_active")
+        .select("base_language, target_language, is_active")
         .eq("is_active", true)
 
       const realLatencyData: LatencyData[] =
@@ -161,7 +161,7 @@ export function AnalyticsDashboard() {
           const status = latency < 50 ? "good" : latency < 100 ? "warning" : "error"
 
           return {
-            channel: `${channel.source_language} → ${channel.target_language}`,
+            channel: `${channel.base_language} → ${channel.target_language}`,
             latency: Math.round(latency),
             status: status as "good" | "warning" | "error",
           }
