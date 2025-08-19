@@ -5,7 +5,7 @@ interface AdminPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function AdminPage({ searchParams }: AdminPageProps) {
+export default async function AdminPage({ searchParams }: AdminPageProps) {
   // Server Component lê os searchParams com segurança
   const initialTab = typeof searchParams.tab === 'string' ? searchParams.tab : undefined;
   
