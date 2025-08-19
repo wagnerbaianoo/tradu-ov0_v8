@@ -1,13 +1,17 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
-// Verifica se as variáveis de ambiente estão configuradas corretamente
-export const isSupabaseConfigured =
-  typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 &&
-  !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("SEU_PROJETO") &&
-  typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length > 0 &&
-  !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes("SEU_ANON_KEY")
+// Lê as variáveis de ambiente
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+// Verifica se as variáveis estão configuradas
+export const isSupabaseConfigured = 
+  typeof supabaseUrl === "string" && 
+  supabaseUrl.length > 0 && 
+  !supabaseUrl.includes("SEU_PROJETO") &&
+  typeof supabaseAnonKey === "string" && 
+  supabaseAnonKey.length > 0 && 
+  !supabaseAnonKey.includes("SEU_ANON_KEY")
 
 // Função auxiliar para retry em fetch
 async function fetchWithRetry(
@@ -33,32 +37,27 @@ async function fetchWithRetry(
 
 // Criação do client com tratamento para SSR e Client
 export const createClient = () => {
-  // Caso esteja no SSR e não configurado -> não quebra
-  if (typeof window === "undefined" && !isSupabaseConfigured) {
+  // Se não configurado e rodando no SSR
+  if (!isSupabaseConfigured && typeof window === "undefined") {
     console.warn("⚠️ Supabase não configurado no servidor (SSR)")
     return null
   }
 
-  // Caso esteja no client e não configurado -> erro explícito
-  if (!isSupabaseConfigured) {
-    throw new Error(
-      "Supabase is not configured. Please check your environment variables."
-    )
+  // Se não configurado e rodando no Client
+  if (!isSupabaseConfigured && typeof window !== "undefined") {
+    throw new Error("Supabase is not configured. Please check your environment variables.")
   }
 
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { global: { fetch: fetchWithRetry } }
-  )
+  // Se configurado, criar e retornar o cliente
+  return createSupabaseClient(supabaseUrl!, supabaseAnonKey!, {
+    global: { fetch: fetchWithRetry }
+  })
 }
 
-// Singleton para uso no Client
-export const supabase =
+// Singleton para uso no Client (com verificação)
+export const supabase = 
   typeof window !== "undefined" && isSupabaseConfigured
-    ? createSupabaseClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        { global: { fetch: fetchWithRetry } }
-      )
+    ? createSupabaseClient(supabaseUrl!, supabaseAnonKey!, {
+        global: { fetch: fetchWithRetry }
+      })
     : null

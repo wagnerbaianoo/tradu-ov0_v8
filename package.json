@@ -5,6 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "dev:clean": "rm -rf .next && rm -rf node_modules/.cache && npm install && npm run dev",
     "lint": "next lint",
     "start": "next start",
     "dev:turbo": "next dev --turbo"
