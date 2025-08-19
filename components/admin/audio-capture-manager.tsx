@@ -20,7 +20,7 @@ import {
   Headphones,
   BarChart3,
 } from "lucide-react"
-import { webRTCClient } from "@/lib/audio/webrtc-client"
+import { getWebRTCClientInstance } from "@/lib/audio/webrtc-client"
 import { AudioVisualizer } from "@/components/translator/audio-visualizer"
 import toast from "react-hot-toast"
 
@@ -220,6 +220,8 @@ export function AudioCaptureManager() {
       return
     }
 
+    const webRTCClient = getWebRTCClientInstance()
+
     try {
       const streamConfig = {
         type: "flue" as const,
@@ -240,6 +242,7 @@ export function AudioCaptureManager() {
   }
 
   const stopStreaming = () => {
+    const webRTCClient = getWebRTCClientInstance()
     webRTCClient.disconnect()
     setIsStreaming(false)
     toast.success("Streaming parado")
@@ -266,6 +269,7 @@ export function AudioCaptureManager() {
       let jitter = 0
 
       if (isStreaming) {
+        const webRTCClient = getWebRTCClientInstance()
         const stats = await webRTCClient.getStats()
         if (stats) {
           stats.forEach((report) => {

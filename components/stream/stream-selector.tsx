@@ -86,6 +86,7 @@ export function StreamSelector({ streams, selectedStream, onStreamChange, onConn
   }
 
   const disconnectStream = () => {
+    const webRTCClient = getWebRTCClientInstance()
     webRTCClient.disconnect()
     setConnectionStatus("disconnected")
     setStreamStats(null)

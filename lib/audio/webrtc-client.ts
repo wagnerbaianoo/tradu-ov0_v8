@@ -228,5 +228,28 @@ export class WebRTCClient {
   }
 }
 
-// Singleton instance
-export const webRTCClient = new WebRTCClient()
+// Lazy singleton instance for browser-only usage
+let _webRTCClient: WebRTCClient | null = null
+
+export function getWebRTCClientInstance(): WebRTCClient {
+  if (typeof window === 'undefined') {
+    // Return a mock client for SSR to prevent crashes
+    return {
+      getMediaDevices: async () => [],
+      captureMedia: async () => null,
+      connectToFlueStream: async () => {},
+      publishToFlueStream: async () => {},
+      getRemoteStream: () => null,
+      getLocalStream: () => null,
+      isStreamConnected: () => false,
+      disconnect: () => {},
+      getStats: async () => null,
+    } as WebRTCClient
+  }
+  
+  if (!_webRTCClient) {
+    _webRTCClient = new WebRTCClient()
+  }
+  
+  return _webRTCClient
+}

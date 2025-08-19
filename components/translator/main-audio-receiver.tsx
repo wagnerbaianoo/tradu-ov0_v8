@@ -95,6 +95,7 @@ export function MainAudioReceiver({
     const stream = availableStreams.find((s) => s.id === selectedStream)
     if (!stream) return
 
+    const webRTCClient = getWebRTCClientInstance()
     setConnectionStatus("connecting")
 
     try {
@@ -134,6 +135,7 @@ export function MainAudioReceiver({
   }
 
   const stopReceiving = () => {
+    const webRTCClient = getWebRTCClientInstance()
     webRTCClient.disconnect()
 
     if (audioRef.current) {

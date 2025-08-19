@@ -48,6 +48,8 @@ export default function StreamPlayer({
   useEffect(() => {
     if (!stream) return
 
+    const webRTCClient = getWebRTCClientInstance()
+
     const setupStream = async () => {
       try {
         setIsBuffering(true)
