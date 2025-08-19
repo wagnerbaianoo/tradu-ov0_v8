@@ -20,7 +20,7 @@ export async function signIn(prevState: any, formData: FormData) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
-  })
+    });
 
   if (error) {
     console.log("[v0] Login error:", error.message)
@@ -34,7 +34,7 @@ export async function signIn(prevState: any, formData: FormData) {
       .from("users")
       .select("role")
       .eq("id", data.user.id)
-      .single()
+      .maybeSingle()
 
     if (roleError) {
       console.log("[v0] Role check error:", roleError.message)

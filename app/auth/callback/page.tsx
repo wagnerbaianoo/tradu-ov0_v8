@@ -18,7 +18,7 @@ export default async function AuthCallback({
       } = await supabase.auth.getUser()
 
       if (user) {
-        const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).single()
+        const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).maybeSingle()
 
         if (userData?.role === "ADMIN" || userData?.role === "SUPER_ADMIN") {
           redirect("/admin")

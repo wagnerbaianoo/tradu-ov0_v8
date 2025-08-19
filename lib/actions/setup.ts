@@ -38,7 +38,7 @@ export async function diagnoseSuperAdmin() {
         .from("users")
         .select("*")
         .eq("email", "superadmin@translateevent.com")
-        .single()
+        .maybeSingle()
       results.user_in_database = !!data && !error
       results.details.database_user = data
       results.details.database_user_error = error?.message

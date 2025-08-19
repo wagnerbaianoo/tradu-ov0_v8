@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
         .select("id")
         .in("role", ["ADMIN", "SUPER_ADMIN"])
         .limit(1)
-        .single()
+        .maybeSingle()
 
       if (!adminExists) {
         return NextResponse.next({ request })
@@ -71,7 +71,7 @@ export async function updateSession(request: NextRequest) {
   // If user is authenticated and trying to access auth pages, redirect based on role
   if (user && (pathname === "/auth/login" || pathname === "/auth/register")) {
     try {
-      const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).single()
+      const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).maybeSingle()
 
       const url = request.nextUrl.clone()
 

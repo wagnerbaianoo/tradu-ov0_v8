@@ -11,8 +11,8 @@ export default async function LoginPage() {
   } = await supabase.auth.getUser()
 
   // If authenticated, redirect based on role
-  if (user) {
-    const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).single()
+  if (user) { // If authenticated, redirect based on role
+    const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).maybeSingle()
 
     if (userData?.role === "ADMIN" || userData?.role === "SUPER_ADMIN") {
       redirect("/admin")
