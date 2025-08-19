@@ -14,6 +14,7 @@ export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
+}) {
   return (
     <html lang="pt-BR" className={`${GeistSans.variable} ${GeistMono.variable} dark`}>
       <head>
@@ -50,6 +51,3 @@ export default async function RootLayout({
       <body className="font-sans antialiased">{children}</body>
     </html>
   )
-}
-
-)
