@@ -1,20 +1,24 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
-// Check if Supabase environment variables are available
-export const isSupabaseConfigured = 
+// Verifica se as variáveis de ambiente estão configuradas corretamente
+export const isSupabaseConfigured =
   typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 && 
+  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 &&
   !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("SEU_PROJETO") &&
   typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "string" &&
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length > 0 &&
   !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes("SEU_ANON_KEY")
 
-// Function to retry fetch requests
-async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 3): Promise<Response> {
+// Função auxiliar para retry em fetch
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit = {},
+  retries = 3
+): Promise<Response> {
   try {
     const res = await fetch(url, {
       ...options,
-      signal: AbortSignal.timeout(5000), // Timeout de 5s
+      signal: AbortSignal.timeout(5000), // timeout de 5s
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return res
@@ -27,30 +31,34 @@ async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 
   }
 }
 
+// Criação do client com tratamento para SSR e Client
 export const createClient = () => {
-  // SSR check - return null on server if not configured
+  // Caso esteja no SSR e não configurado -> não quebra
   if (typeof window === "undefined" && !isSupabaseConfigured) {
-    console.warn("Supabase not configured on server side")
+    console.warn("⚠️ Supabase não configurado no servidor (SSR)")
     return null
   }
 
-  // Client-side check - throw error if not configured
+  // Caso esteja no client e não configurado -> erro explícito
   if (!isSupabaseConfigured) {
-    throw new Error("Supabase is not configured. Please check your environment variables.")
+    throw new Error(
+      "Supabase is not configured. Please check your environment variables."
+    )
   }
 
   return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     { global: { fetch: fetchWithRetry } }
   )
 }
 
-// Create a singleton instance of the Supabase client for client-side usage
-export const supabase = typeof window !== "undefined" && isSupabaseConfigured 
-  ? createSupabaseClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
-      { global: { fetch: fetchWithRetry } }
-    ) 
-  : null
+// Singleton para uso no Client
+export const supabase =
+  typeof window !== "undefined" && isSupabaseConfigured
+    ? createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { global: { fetch: fetchWithRetry } }
+      )
+    : null
