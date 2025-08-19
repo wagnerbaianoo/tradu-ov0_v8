@@ -47,16 +47,16 @@ export function EventManagement({ onStatsUpdate }: EventManagementProps) {
   })
   const supabase = createClient()
 
-  // Verificar se Supabase está configurado
-  if (supabase === null) {
+  // Check if Supabase is configured
+  if (!supabase) {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-white">Gerenciamento de Eventos</h2>
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
           <CardContent className="p-8 text-center">
             <div className="text-yellow-400 mb-4">⚠️</div>
-            <h3 className="text-xl font-bold text-white mb-2">Supabase não configurado no servidor</h3>
-            <p className="text-gray-300">Verifique as variáveis de ambiente no .env.local</p>
+            <h3 className="text-xl font-bold text-white mb-2">Configuração do Supabase Necessária</h3>
+            <p className="text-gray-300">Configure as variáveis de ambiente do Supabase</p>
           </CardContent>
         </Card>
       </div>

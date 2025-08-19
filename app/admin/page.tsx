@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +13,7 @@ import { StreamManagement } from "@/components/admin/stream-management";
 import { AnalyticsDashboard } from "@/components/admin/analytics-dashboard";
 import { UserManagement } from "@/components/admin/user-management";
 import { SystemSettings } from "@/components/admin/system-settings";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 // Componentes dinâmicos COM tratamento de erro
 const AudioCaptureManager = dynamic(
@@ -53,9 +54,11 @@ export default function AdminPage() {
 
   useEffect(() => {
     setIsClient(true);
-    loadDashboardStats();
-    const interval = setInterval(loadDashboardStats, 30000);
-    return () => clearInterval(interval);
+    if (isSupabaseConfigured) {
+      loadDashboardStats();
+      const interval = setInterval(loadDashboardStats, 30000);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   const loadDashboardStats = async () => {
@@ -72,6 +75,25 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="text-white text-xl">Carregando dashboard...</div>
+      </div>
+    );
+  }
+
+  // Show configuration message if Supabase is not configured
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <Card className="w-full max-w-md bg-white/10 backdrop-blur-md border-white/20">
+          <CardContent className="p-8 text-center">
+            <div className="text-yellow-400 mb-4 text-4xl">⚠️</div>
+            <h3 className="text-xl font-bold text-white mb-2">Configuração do Supabase Necessária</h3>
+            <p className="text-gray-300 mb-4">Configure as variáveis de ambiente no arquivo .env.local</p>
+            <div className="text-left text-sm text-gray-400 bg-black/20 p-3 rounded">
+              <div>NEXT_PUBLIC_SUPABASE_URL=https://SEU_PROJETO.supabase.co</div>
+              <div>NEXT_PUBLIC_SUPABASE_ANON_KEY=SEU_ANON_KEY</div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -190,35 +212,33 @@ export default function AdminPage() {
             </TabsTrigger>
           </TabsList>
 
-          <Suspense fallback={<div className="text-white p-4">Carregando módulo...</div>}>
-            <TabsContent value="events" className="mt-6">
-              <EventManagement onStatsUpdate={loadDashboardStats} />
-            </TabsContent>
+          <TabsContent value="events" className="mt-6">
+            <EventManagement onStatsUpdate={loadDashboardStats} />
+          </TabsContent>
 
-            <TabsContent value="streams" className="mt-6">
-              <StreamManagement onStatsUpdate={loadDashboardStats} />
-            </TabsContent>
+          <TabsContent value="streams" className="mt-6">
+            <StreamManagement onStatsUpdate={loadDashboardStats} />
+          </TabsContent>
 
-            <TabsContent value="audio" className="mt-6">
-              <AudioCaptureManager />
-            </TabsContent>
+          <TabsContent value="audio" className="mt-6">
+            <AudioCaptureManager />
+          </TabsContent>
 
-            <TabsContent value="analytics" className="mt-6">
-              <AnalyticsDashboard />
-            </TabsContent>
+          <TabsContent value="analytics" className="mt-6">
+            <AnalyticsDashboard />
+          </TabsContent>
 
-            <TabsContent value="users" className="mt-6">
-              <UserManagement onStatsUpdate={loadDashboardStats} />
-            </TabsContent>
+          <TabsContent value="users" className="mt-6">
+            <UserManagement onStatsUpdate={loadDashboardStats} />
+          </TabsContent>
 
-            <TabsContent value="settings" className="mt-6">
-              <SystemSettings />
-            </TabsContent>
+          <TabsContent value="settings" className="mt-6">
+            <SystemSettings />
+          </TabsContent>
 
-            <TabsContent value="monitor" className="mt-6">
-              <RealTimeMonitor />
-            </TabsContent>
-          </Suspense>
+          <TabsContent value="monitor" className="mt-6">
+            <RealTimeMonitor />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
