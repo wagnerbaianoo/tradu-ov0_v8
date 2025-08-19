@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Radio, Users, Eye, Activity, Volume2, Video, Headphones, Globe, TrendingUp } from "lucide-react"
 import StreamPlayer from "@/components/stream-player"
 import { StreamSelector } from "@/components/stream/stream-selector"
 import { createClient } from "@/lib/supabase/client"
 import { isSupabaseConfigured } from "@/lib/supabase/client"
+import Link from "next/link"
 
 interface LiveStream {
   id: string
@@ -66,13 +68,14 @@ export function LiveStreamDashboard() {
               <div>NEXT_PUBLIC_SUPABASE_ANON_KEY=SEU_ANON_KEY</div>
             </div>
             <div className="mt-4">
-              <Button 
-                onClick={() => window.location.href = '/'}
-                variant="outline"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                Voltar ao Início
-              </Button>
+              <Link href="/" asChild>
+                <Button 
+                  variant="outline"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  Voltar ao Início
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -239,13 +242,14 @@ export function LiveStreamDashboard() {
               </div>
             )}
             <div className="mt-4">
-              <Button 
-                onClick={() => window.location.href = '/'}
-                variant="outline"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                Voltar ao Início
-              </Button>
+              <Link href="/" asChild>
+                <Button 
+                  variant="outline"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  Voltar ao Início
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
