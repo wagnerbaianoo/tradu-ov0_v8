@@ -1,32 +1,44 @@
+// app/admin/page.tsx
 'use client';
 
 import { useState, useEffect, Suspense } from "react";
+import dynamic from 'next/dynamic'; // Importação ESSENCIAL que estava faltando
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react";
 
-// Componentes estáticos (não usam APIs do browser)
+// Componentes estáticos
 import EventManagement from "@/components/admin/event-management";
 import StreamManagement from "@/components/admin/stream-management";
 import AnalyticsDashboard from "@/components/admin/analytics-dashboard";
 import UserManagement from "@/components/admin/user-management";
 import SystemSettings from "@/components/admin/system-settings";
 
-// Componentes dinâmicos (usam APIs do browser)
+// Componentes dinâmicos COM tratamento de erro
 const AudioCaptureManager = dynamic(
-  () => import("@/components/admin/audio-capture-manager"),
+  () => import("@/components/admin/audio-capture-manager")
+    .then(mod => mod.default)
+    .catch(err => {
+      console.error("Failed to load AudioCaptureManager", err);
+      return () => <div className="text-red-500">Erro ao carregar módulo de áudio</div>;
+    }),
   { 
     ssr: false,
-    loading: () => <div className="text-white p-4">Carregando áudio...</div>
+    loading: () => <div className="text-white p-4">Carregando controle de áudio...</div>
   }
 );
 
 const RealTimeMonitor = dynamic(
-  () => import("@/components/admin/real-time-monitor"),
+  () => import("@/components/admin/real-time-monitor")
+    .then(mod => mod.default)
+    .catch(err => {
+      console.error("Failed to load RealTimeMonitor", err);
+      return () => <div className="text-red-500">Erro ao carregar monitor</div>;
+    }),
   { 
     ssr: false,
-    loading: () => <div className="text-white p-4">Carregando monitor...</div>
+    loading: () => <div className="text-white p-4">Carregando monitor em tempo real...</div>
   }
 );
 
@@ -67,7 +79,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Cabeçalho e Stats Cards permanecem iguais */}
+      {/* Header e Stats Cards permanecem iguais */}
       
       <div className="container mx-auto px-4 py-6">
         <Tabs defaultValue="events" className="w-full">
