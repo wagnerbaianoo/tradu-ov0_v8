@@ -1,9 +1,13 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
 // Check if Supabase environment variables are available
-export const isSupabaseConfigured = typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 && typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length > 0
+export const isSupabaseConfigured = 
+  typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "string" &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 && 
+  !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("SEU_PROJETO") &&
+  typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "string" &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length > 0 &&
+  !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes("SEU_ANON_KEY")
 
 // Function to retry fetch requests
 async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 3): Promise<Response> {
@@ -23,13 +27,30 @@ async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 
   }
 }
 
-// Create a singleton instance of the Supabase client
-export const supabase = isSupabaseConfigured ? createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { global: { fetch: fetchWithRetry } }) : null
-
 export const createClient = () => {
+  // SSR check - return null on server if not configured
+  if (typeof window === "undefined" && !isSupabaseConfigured) {
+    console.warn("Supabase not configured on server side")
+    return null
+  }
+
+  // Client-side check - throw error if not configured
   if (!isSupabaseConfigured) {
     throw new Error("Supabase is not configured. Please check your environment variables.")
   }
 
-  return createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { global: { fetch: fetchWithRetry } })
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!, 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
+    { global: { fetch: fetchWithRetry } }
+  )
 }
+
+// Create a singleton instance of the Supabase client for client-side usage
+export const supabase = typeof window !== "undefined" && isSupabaseConfigured 
+  ? createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!, 
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
+      { global: { fetch: fetchWithRetry } }
+    ) 
+  : null
