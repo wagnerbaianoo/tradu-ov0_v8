@@ -7,11 +7,21 @@ import { Badge } from "@/components/ui/badge"
 import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react"
 import { EventManagement } from "@/components/admin/event-management"
 import { StreamManagement } from "@/components/admin/stream-management"
-import { AudioCaptureManager } from "@/components/admin/audio-capture-manager"
 import { AnalyticsDashboard } from "@/components/admin/analytics-dashboard"
 import { UserManagement } from "@/components/admin/user-management"
 import { SystemSettings } from "@/components/admin/system-settings"
-import { RealTimeMonitor } from "@/components/admin/real-time-monitor"
+import dynamic from 'next/dynamic'
+
+// Carrega componentes que usam APIs do navegador apenas no cliente
+const AudioCaptureManager = dynamic(
+  () => import('@/components/admin/audio-capture-manager'),
+  { ssr: false }
+)
+
+const RealTimeMonitor = dynamic(
+  () => import('@/components/admin/real-time-monitor'),
+  { ssr: false }
+)
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -53,8 +63,8 @@ export default function AdminDashboard() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-white">Painel Administrativo</h1>
-              <p className="text-gray-300">TranslateEvent V5 - Sistema de Gestão (Modo Demo)</p>
+              <h1 className="text-3xl font-bold text-white">Gerenciador</h1>
+              <p className="text-gray-300">Plurall Simutâneo v1</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
@@ -102,6 +112,7 @@ export default function AdminDashboard() {
                   <Activity className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
+      
                   <p className="text-sm text-gray-300">Eventos Ativos</p>
                   <p className="text-2xl font-bold text-white">{loading ? "..." : stats.activeEvents}</p>
                 </div>
