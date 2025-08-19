@@ -7,17 +7,38 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Users, Radio, Activity, Globe, Settings, Mic } from "lucide-react";
 
-// Carregar componentes dinamicamente com SSR desabilitado
-const EventManagement = dynamic(() => import("@/components/admin/event-management"), { ssr: false });
-const StreamManagement = dynamic(() => import("@/components/admin/stream-management"), { ssr: false });
-const AudioCaptureManager = dynamic(() => import("@/components/admin/audio-capture-manager"), { ssr: false });
-const AnalyticsDashboard = dynamic(() => import("@/components/admin/analytics-dashboard"), { ssr: false });
-const UserManagement = dynamic(() => import("@/components/admin/user-management"), { ssr: false });
-const SystemSettings = dynamic(() => import("@/components/admin/system-settings"), { ssr: false });
-const RealTimeMonitor = dynamic(() => import("@/components/admin/real-time-monitor"), { 
-  ssr: false,
-  loading: () => <div className="text-white">Carregando monitor...</div>
-});
+// Importações dinâmicas corretas com export default
+const EventManagement = dynamic(
+  () => import("@/components/admin/event-management").then(mod => mod.default),
+  { ssr: false, loading: () => <div className="text-white">Carregando...</div> }
+);
+const StreamManagement = dynamic(
+  () => import("@/components/admin/stream-management").then(mod => mod.default),
+  { ssr: false }
+);
+const AudioCaptureManager = dynamic(
+  () => import("@/components/admin/audio-capture-manager").then(mod => mod.default),
+  { ssr: false }
+);
+const AnalyticsDashboard = dynamic(
+  () => import("@/components/admin/analytics-dashboard").then(mod => mod.default),
+  { ssr: false }
+);
+const UserManagement = dynamic(
+  () => import("@/components/admin/user-management").then(mod => mod.default),
+  { ssr: false }
+);
+const SystemSettings = dynamic(
+  () => import("@/components/admin/system-settings").then(mod => mod.default),
+  { ssr: false }
+);
+const RealTimeMonitor = dynamic(
+  () => import("@/components/admin/real-time-monitor").then(mod => mod.default),
+  { 
+    ssr: false,
+    loading: () => <div className="text-white">Carregando monitor...</div>
+  }
+);
 
 export default function AdminDashboard() {
   const [isClient, setIsClient] = useState(false);
