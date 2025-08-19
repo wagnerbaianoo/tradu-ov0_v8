@@ -179,9 +179,12 @@ export function ProductionValidator() {
   const checkSystemPermissions = async (): Promise<ValidationCheck> => {
     try {
       // Test basic CRUD operations
+      const now = new Date().toISOString()
       const testData = {
         name: "Test Event",
         description: "System validation test",
+        start_time: now,
+        end_time: new Date(Date.now() + 3600000).toISOString(), // 1 hour from now
         is_active: false,
       }
 
