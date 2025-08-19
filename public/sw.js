@@ -148,27 +148,12 @@ async function syncNotes() {
     const notes = await getOfflineNotes()
 
     for (const note of notes) {
-      // Get Supabase URL and anon key from environment or hardcoded
-      const supabaseUrl = 'https://eozbqzajqtortjugyyvm.supabase.co'
-      const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvemJxemFqcXRvcnRqdWd5eXZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzOTQ0NzksImV4cCI6MjA3MDk3MDQ3OX0.t9CKaYIF2jR232NCo8H5ANros07ZTvY7jXgc9Ba4XeA'
-      
-      await fetch(`${supabaseUrl}/rest/v1/notes`, {
+      await fetch("/api/notes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": supabaseAnonKey,
-          "Authorization": `Bearer ${supabaseAnonKey}`,
-          "Prefer": "return=minimal"
         },
-        body: JSON.stringify({
-          id: note.id,
-          user_id: note.user_id || 'anonymous',
-          title: note.title,
-          content: note.content,
-          tags: note.tags,
-          created_at: note.created_at,
-          updated_at: note.updated_at
-        }),
+        body: JSON.stringify(note),
       })
     }
 
@@ -203,53 +188,12 @@ async function syncPollResponses() {
 
 // Helper functions for offline data management
 async function getOfflineNotes() {
-  return new Promise((resolve) => {
-    const request = indexedDB.open("TranslateEventDB", 1)
-    
-    request.onsuccess = (event) => {
-      const db = event.target.result
-      const transaction = db.transaction(["notes"], "readonly")
-      const store = transaction.objectStore("notes")
-      const getAllRequest = store.getAll()
-      
-      getAllRequest.onsuccess = () => {
-        const notes = getAllRequest.result || []
-        const unsyncedNotes = notes.filter(note => !note.synced)
-        resolve(unsyncedNotes)
-      }
-      
-      getAllRequest.onerror = () => resolve([])
-    }
-    
-    request.onerror = () => resolve([])
-  })
+  // Implementation would use IndexedDB
+  return []
 }
 
 async function clearOfflineNotes() {
-  return new Promise((resolve) => {
-    const request = indexedDB.open("TranslateEventDB", 1)
-    
-    request.onsuccess = (event) => {
-      const db = event.target.result
-      const transaction = db.transaction(["notes"], "readwrite")
-      const store = transaction.objectStore("notes")
-      
-      // Mark all notes as synced instead of deleting them
-      const getAllRequest = store.getAll()
-      getAllRequest.onsuccess = () => {
-        const notes = getAllRequest.result || []
-        notes.forEach(note => {
-          note.synced = true
-          store.put(note)
-        })
-      }
-      
-      transaction.oncomplete = () => resolve()
-      transaction.onerror = () => resolve()
-    }
-    
-    request.onerror = () => resolve()
-  })
+  // Implementation would clear IndexedDB
 }
 
 async function getOfflinePollResponses() {
