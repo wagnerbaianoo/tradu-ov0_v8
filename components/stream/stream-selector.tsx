@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Radio, Volume2, Video, Headphones, Wifi, WifiOff } from "lucide-react"
 import { webRTCClient, type StreamConfig } from "@/lib/audio/webrtc-client"
+import { isSupabaseConfigured } from "@/lib/supabase/client"
 
 interface Stream {
   id: string
@@ -34,6 +35,19 @@ export function StreamSelector({ streams, selectedStream, onStreamChange, onConn
   const [connectionStatus, setConnectionStatus] = useState<"disconnected" | "connecting" | "connected">("disconnected")
   const [audioMode, setAudioMode] = useState<"auto" | "webrtc" | "hls">("auto")
   const [streamStats, setStreamStats] = useState<any>(null)
+
+  // Show fallback if Supabase not configured
+  if (!isSupabaseConfigured) {
+    return (
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <CardContent className="p-6 text-center">
+          <div className="text-yellow-400 mb-4">⚠️</div>
+          <h3 className="text-lg font-bold text-white mb-2">Configuração Necessária</h3>
+          <p className="text-gray-300 text-sm">Configure o Supabase para selecionar streams</p>
+        </CardContent>
+      </Card>
+    )
+  }
 
   useEffect(() => {
     // Monitor connection status
