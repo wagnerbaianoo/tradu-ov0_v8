@@ -245,7 +245,7 @@ export class WebRTCClient {
 // Lazy singleton instance for browser-only usage
 let _webRTCClient: WebRTCClient | null = null
 
-export function getWebRTCClientInstance(): WebRTCClient {
+export const getWebRTCClientInstance = (): WebRTCClient => {
   if (typeof window === 'undefined') {
     // Return a mock client for SSR to prevent crashes
     return {
@@ -272,4 +272,4 @@ export function getWebRTCClientInstance(): WebRTCClient {
 export default WebRTCClient
 
 // Named export for webRTCClient
-export const webRTCClient = getWebRTCClientInstance()
+export const webRTCClient = typeof window !== 'undefined' ? getWebRTCClientInstance() : null

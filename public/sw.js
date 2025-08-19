@@ -4,7 +4,7 @@ const STATIC_CACHE = "translateevent-static-v1"
 const DYNAMIC_CACHE = "translateevent-dynamic-v1"
 
 // Files to cache immediately
-const STATIC_FILES = ["/", "/translator", "/manifest.json", "/icon-192.png", "/icon-512.png"]
+const STATIC_FILES = ["/", "/translator", "/manifest.json"]
 
 // Install event - cache static files
 self.addEventListener("install", (event) => {

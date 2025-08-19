@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Headphones, BluetoothOffIcon as HeadphonesOff, Volume2, Radio } from "lucide-react"
-import { webRTCClient } from "@/lib/audio/webrtc-client"
+import { getWebRTCClientInstance } from "@/lib/audio/webrtc-client"
 import { createClient } from "@/lib/supabase/client"
 import toast from "react-hot-toast"
 

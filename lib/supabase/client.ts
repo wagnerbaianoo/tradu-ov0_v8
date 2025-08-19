@@ -55,9 +55,3 @@ export const createClient = () => {
 }
 
 // Singleton for Client usage (with verification)
-export const supabase = 
-  typeof window !== "undefined" && isSupabaseConfigured
-    ? createSupabaseClient(supabaseUrl!, supabaseAnonKey!, {
-        global: { fetch: fetchWithRetry }
-      })
-    : null
